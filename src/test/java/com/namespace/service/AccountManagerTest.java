@@ -1,25 +1,20 @@
 package com.namespace.service;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.namespace.domain.Account;
 import com.namespace.domain.UserGAE;
 import com.namespace.repository.AccountDAO;
-import com.namespace.repository.UserGaeDAO;
 import com.namespace.repository.TestBase;
+import com.namespace.repository.UserGaeDAO;
 import com.namespace.repository.mock.AccountDAOMock;
 import com.namespace.repository.mock.UserGaeDAOMock;
-import com.namespace.service.AccountManagerImpl;
-import com.namespace.service.AccountManager;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.*;
 
 public class AccountManagerTest extends TestBase{
 
@@ -47,7 +42,7 @@ public class AccountManagerTest extends TestBase{
 		assertFalse(this.manager.updateUser(null));
 		assertFalse(this.manager.updateUser(new UserGAE()));
 		Objectify ofy = super.objectifyFactory.begin();
-		assertEquals(0, ofy.query(UserGAE.class).list().size());
+		assertEquals(0, ofy.load().type(UserGAE.class).list().size());
 		assertFalse(this.manager.updateUser(new UserGAE("user1", "12345", true)));
 	}
 	
@@ -56,12 +51,11 @@ public class AccountManagerTest extends TestBase{
 		Objectify ofy = super.objectifyFactory.begin();
 		
 		UserGAE user = new UserGAE("user", "12345", true);
-		ofy.put(user);
+		ofy.save().entity(user).now();
 		
 		user.setPassword("AAAAAAAAAA");
 		assertTrue(this.manager.updateUser(user));
-		assertEquals(user, ofy.query(UserGAE.class).get());
-		assertEquals(1, ofy.query(UserGAE.class).filter("username", user.getUsername()).list().size());
+		assertEquals(user, ofy.load().key(Key.create(UserGAE.class, user.getUsername())).now());
 	}
 	
 	@Test
@@ -78,18 +72,18 @@ public class AccountManagerTest extends TestBase{
 		Account account = new Account(null, "David", "D.", "example@example.com", null);
 		assertFalse(this.manager.updateAccount(account));
 		
-		ofy.put(account);
+		ofy.save().entities(account).now();
 		assertFalse(this.manager.updateAccount(account));
 
 		/*
 		 * Right results
 		 */
-		ofy.put(user);
-		account.setUser(new Key<UserGAE>(UserGAE.class, user.getUsername()));
-		ofy.put(account);
+		ofy.save().entities(user).now();
+		account.setUser(Key.create(UserGAE.class, user.getUsername()));
+		ofy.save().entities(account).now();
 		assertTrue(this.manager.updateAccount(account));
 		
-		Account accountFromDatastore = ofy.query(Account.class).ancestor(user).get();
+		Account accountFromDatastore = ofy.load().type(Account.class).ancestor(user).first().now();
 		assertEquals(account, accountFromDatastore); 
 		
 	}

@@ -1,18 +1,13 @@
 package com.namespace.service.dto;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-
-import java.util.Map;
-
+import com.namespace.domain.Account;
+import com.namespace.domain.UserGAE;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
-import com.namespace.service.dto.UserAdministrationForm;
-import com.namespace.service.dto.UserAdministrationFormAssembler;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class UserAdministrationDTOAssemblerTest {
 
@@ -31,7 +26,7 @@ public class UserAdministrationDTOAssemblerTest {
 		assertAccountNull(formNull);
 		
 		UserGAE user = new UserGAE("user", "12345", true);
-		Account account = new Account(new Long(1), "David", "D.", "example@example.com", null);
+		Account account = new Account(1L, "David", "D.", "example@example.com", null);
 
 		UserAdministrationForm form1 = this.assembler.createUserAdministrationForm(null, account);
 		assertUserNull(form1);

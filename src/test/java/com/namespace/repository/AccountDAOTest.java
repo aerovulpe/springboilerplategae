@@ -1,25 +1,20 @@
 package com.namespace.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Objectify;
+import com.namespace.domain.Account;
+import com.namespace.domain.UserGAE;
+import com.namespace.repository.mock.AccountDAOMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
-import com.namespace.repository.AccountDAOImpl;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class AccountDAOTest extends TestBase{
 
@@ -36,7 +31,7 @@ public class AccountDAOTest extends TestBase{
 		this.objectifyFactory.register(UserGAE.class);
 		this.objectifyFactory.register(Account.class);
 		
-		dao = new AccountDAOImpl(super.objectifyFactory);
+		dao = new AccountDAOMock(super.objectifyFactory);
 	}
 	
 	@Test
@@ -70,17 +65,17 @@ public class AccountDAOTest extends TestBase{
 		
 		Objectify ofy = this.objectifyFactory.begin();
 		UserGAE user = new UserGAE("user3", "33333", false);
-		ofy.put(user);
-		Key<UserGAE> userKey = new Key<UserGAE>(UserGAE.class, user.getUsername());
+		ofy.save().entity(user).now();
+		Key<UserGAE> userKey = Key.create(UserGAE.class, user.getUsername());
 
 		Account account = new Account(null, "David", "D.", "example@example.com", userKey);
-		
-		ofy.put(account);
+
+		ofy.save().entity(account).now();
 		
 		/*
 		 * It must work just if Account is at the same UserGAE entity group
 		 */
-		Account accountFromDatastore = ofy.query(Account.class).ancestor(userKey).get();
+		Account accountFromDatastore = ofy.load().type(Account.class).ancestor(userKey).first().now();
 //		Account accountFromDatastore = ofy.query(Account.class).filter("user", userKey).get(); //without @Parent in Account.java
 
 		assertEquals(accountFromDatastore, account);
@@ -100,7 +95,7 @@ public class AccountDAOTest extends TestBase{
 	public void create_RightResults(){
 		List<Account> accountListToPersist = generateAccountsAndPersistThem();
 		List<Account> accountFromDatastoreList = this.objectifyFactory.begin()
-									.query(Account.class).list();
+									.load().type(Account.class).list();
 		compareIfList1ContainsList2Objects(accountFromDatastoreList, 
 				accountListToPersist);
 		assertEquals(accountFromDatastoreList.size(), accountListToPersist.size());
@@ -122,7 +117,8 @@ public class AccountDAOTest extends TestBase{
 	public void update_RightResults(){
 		generateAccountsAndPersistThem();
 		Objectify ofy = this.objectifyFactory.begin();
-		Account account = ofy.query(Account.class).get();
+		Account account = ofy.load().type(Account.class).first().now();
+        logger.warn("LOOK MUM! I'M FAMOUS!!! **********************:" + account.toString());
 		try {
 			this.dao.update(account);
 		} catch (Exception e) {
@@ -130,8 +126,8 @@ public class AccountDAOTest extends TestBase{
 		}finally{
 			assertTrue(true);
 		}
-		Key<UserGAE> userKey = new Key<UserGAE>(UserGAE.class, "user");
-		Account updatedAccount = ofy.query(Account.class).ancestor(userKey).get();
+		Key<UserGAE> userKey = Key.create(UserGAE.class, "user");
+		Account updatedAccount = ofy.load().type(Account.class).first().now();
 //		Account updatedAccount = ofy.get(Account.class, account.getId());
 		assertEquals(updatedAccount, account);
 	}
@@ -154,15 +150,14 @@ public class AccountDAOTest extends TestBase{
 	
 	private void persistAccountList(List<Account> list){
 		Objectify ofy = this.objectifyFactory.begin();
-		for (Iterator<Account> iterator = list.iterator(); iterator.hasNext();) {
-			Account account = (Account) iterator.next();
-			ofy.put(account);
+		for (Account account : list) {
+			ofy.save().entities(account).now();
 		}
 	}
 	
 	private List<Account> generateAccountList(){
 		UserGAE user = new UserGAE("user", "12345", true);
-		Key<UserGAE> userKey = new Key<UserGAE>(UserGAE.class, user.getUsername());
+		Key<UserGAE> userKey = Key.create(UserGAE.class, user.getUsername());
 		Account account1 = new Account(null, "David", "D.", "example@example.com", userKey);
 		
 		Account account2 = new Account(null, "David", "D.", "example@example.com", userKey);

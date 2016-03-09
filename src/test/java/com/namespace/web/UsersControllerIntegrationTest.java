@@ -1,12 +1,13 @@
 package com.namespace.web;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Objectify;
+import com.namespace.domain.Account;
+import com.namespace.domain.UserGAE;
+import com.namespace.repository.TestBase;
+import com.namespace.repository.UserGaeDAOImpl;
+import com.namespace.service.validator.UserAdministrationValidator;
+import com.namespace.util.SecurityUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,15 +24,11 @@ import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
-import com.namespace.repository.TestBase;
-import com.namespace.repository.UserGaeDAOImpl;
-import com.namespace.service.validator.UserAdministrationValidator;
-import com.namespace.util.SecurityUtil;
-import com.namespace.web.UsersController;
+import javax.inject.Inject;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({
@@ -170,8 +167,8 @@ public class UsersControllerIntegrationTest extends TestBase {
 	
 	private void createAccountAndPutIntoDatastore(){
 		Objectify ofy = this.objectifyFactory.begin();
-		Key<UserGAE> userKey = ofy.put(new UserGAE(USER_USERNAME, USER_PASSWORD, true, true));
-		ofy.put(new Account(null, ACCOUNT_FIRST_NAME, ACCOUNT_LAST_NAME, ACCOUNT_EMAIL, userKey));
+		Key<UserGAE> userKey = ofy.save().entity(new UserGAE(USER_USERNAME, USER_PASSWORD, true, true)).now();
+		ofy.save().entity(new Account(null, ACCOUNT_FIRST_NAME, ACCOUNT_LAST_NAME, ACCOUNT_EMAIL, userKey)).now();
 		
 	}
 	

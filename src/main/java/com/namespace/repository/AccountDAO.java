@@ -1,13 +1,13 @@
 package com.namespace.repository;
 
-import java.util.List;
-
 import com.namespace.domain.Account;
+
+import java.util.List;
 
 public interface AccountDAO extends GenericDAO<Account>{
 
-	public List<Account> findAll();
+	List<Account> findAll();
 
-	public Account findByUsername(String username);
+	Account findByUsername(String username);
 	
 }

@@ -1,24 +1,19 @@
 package com.namespace.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertNull;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.google.appengine.api.datastore.DatastoreTimeoutException;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Objectify;
+import com.namespace.domain.UserGAE;
+import com.namespace.repository.mock.UserGaeDAOMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.appengine.api.datastore.DatastoreTimeoutException;
-import com.googlecode.objectify.Objectify;
-import com.namespace.domain.UserGAE;
-import com.namespace.repository.UserGaeDAOImpl;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class UserGaeDAOTest extends TestBase{
 
@@ -32,7 +27,7 @@ public class UserGaeDAOTest extends TestBase{
 	public void setUp(){
 		super.setUp();
 		super.objectifyFactory.register(UserGAE.class);
-		dao = new UserGaeDAOImpl(super.objectifyFactory);
+		dao = new UserGaeDAOMock(super.objectifyFactory);
 	}
 	
 	@Test 
@@ -100,7 +95,7 @@ public class UserGaeDAOTest extends TestBase{
 		
 		UserGAE userEnabled = new UserGAE("userEnabled", "12345", true, true);
 		Objectify ofy = this.objectifyFactory.begin();
-		ofy.put(userEnabled);
+		ofy.save().entity(userEnabled).now();
 		assertEquals(1, this.dao.findAllEnabledUsers(true).size());
 		assertEquals(userEnabled, this.dao.findAllEnabledUsers(true).get(0));
 	}
@@ -114,7 +109,7 @@ public class UserGaeDAOTest extends TestBase{
 		assertTrue(true);
 		
 		UserGAE user = new UserGAE("user", "12345", true, true);
-		this.objectifyFactory.begin().put(user);
+		this.objectifyFactory.begin().save().entity(user).now();
 		List<UserGAE> userFromDatastoreList2 = this.dao.findAllEnabledUsers(true);
 		assertTrue(userFromDatastoreList2.contains(user));
 	}
@@ -137,7 +132,7 @@ public class UserGaeDAOTest extends TestBase{
 		List<UserGAE> userListToPersist = generateUsersAndPersistThem();
 		
 		List<UserGAE> userFromDatastoreList = this.objectifyFactory.begin()
-												.query(UserGAE.class).list();
+												.load().type(UserGAE.class).list();
 		
 		compareIfList1ContainsList2Objects(userListToPersist, userFromDatastoreList);
 		assertEquals(userListToPersist.size(), userFromDatastoreList.size());
@@ -166,7 +161,7 @@ public class UserGaeDAOTest extends TestBase{
 	public void update_RightResults(){
 		generateUsersAndPersistThem();
 		Objectify ofy = this.objectifyFactory.begin();
-		UserGAE user = ofy.query(UserGAE.class).get();
+		UserGAE user = ofy.load().type(UserGAE.class).first().now();
 		user.setPassword("0000");
 		try {
 			this.dao.update(user);
@@ -175,7 +170,7 @@ public class UserGaeDAOTest extends TestBase{
 		} finally {
 			assertTrue(true);
 		}
-		UserGAE updatedUser = ofy.get(UserGAE.class, user.getUsername());
+		UserGAE updatedUser = ofy.load().key(Key.create(UserGAE.class, user.getUsername())).now();
 		assertEquals(updatedUser, user);
 	}
 
@@ -211,11 +206,9 @@ public class UserGaeDAOTest extends TestBase{
 	}
 	private void compareIfList1ContainsList2Objects(
 			List<UserGAE> list1, List<UserGAE> list2) {
-		for (Iterator<UserGAE> iterator = list2.iterator(); iterator
-				.hasNext();) {
-			UserGAE user = (UserGAE) iterator.next();
-			assertTrue(list1.contains(user));
-		}
+        for (UserGAE user : list2) {
+            assertTrue(list1.contains(user));
+        }
 	}
 	
 	private List<UserGAE> generateUsersAndPersistThem() {
@@ -227,7 +220,7 @@ public class UserGaeDAOTest extends TestBase{
 	private List<UserGAE> generateUserList() {
 		UserGAE user1 = new UserGAE("user", "12345", false);
 		UserGAE user2 = new UserGAE("admin", "12345", true);
-		List<UserGAE> userListToPersist = new ArrayList<UserGAE>();
+		List<UserGAE> userListToPersist = new ArrayList<>();
 		userListToPersist.add(user1);
 		userListToPersist.add(user2);
 		return userListToPersist;
@@ -235,11 +228,7 @@ public class UserGaeDAOTest extends TestBase{
 
 	private void persistUserList(List<UserGAE> userListToPersist) {
 		Objectify ofy = this.objectifyFactory.begin();
-		for (Iterator<UserGAE> iterator = userListToPersist.iterator(); iterator
-				.hasNext();) {
-			UserGAE user = (UserGAE) iterator.next();
-			ofy.put(user);
-		}
+        ofy.save().entities(userListToPersist).now();
 	}
 
 	

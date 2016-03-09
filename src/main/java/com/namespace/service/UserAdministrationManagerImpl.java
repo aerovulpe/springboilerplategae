@@ -1,21 +1,20 @@
 package com.namespace.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
-
 import com.googlecode.objectify.Key;
 import com.namespace.domain.Account;
 import com.namespace.domain.UserGAE;
 import com.namespace.repository.AccountDAO;
 import com.namespace.repository.UserGaeDAO;
 import com.namespace.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Service
 @Secured({"ROLE_ADMIN"})
@@ -48,7 +47,7 @@ public class UserAdministrationManagerImpl extends AbstractCurrentUserManager im
 			e.printStackTrace();
 		}
 		
-		Key<UserGAE> userKey = new Key<UserGAE>(UserGAE.class, user.getUsername());
+		Key<UserGAE> userKey = Key.create(UserGAE.class, user.getUsername());
 		account.setUser(userKey);
 		try {
 			logger.info("Trying to create a new account: " + account.toString());

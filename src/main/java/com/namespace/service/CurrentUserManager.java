@@ -4,6 +4,6 @@ import com.namespace.domain.UserGAE;
 
 public interface CurrentUserManager {
 
-	public UserGAE getEnabledUser();
+    UserGAE getEnabledUser();
 
 }

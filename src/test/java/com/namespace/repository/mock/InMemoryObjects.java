@@ -1,12 +1,12 @@
 package com.namespace.repository.mock;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.namespace.domain.Account;
 import com.namespace.domain.UserGAE;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryObjects implements IDaoMocks {
 
@@ -79,13 +79,13 @@ public class InMemoryObjects implements IDaoMocks {
 		accounts = new ArrayList<Account>();
 
 		UserGAE user = new UserGAE("user", "12345", true);
-		Key<UserGAE> userKey = new Key<UserGAE>(UserGAE.class, "user");
+		Key<UserGAE> userKey = Key.create(UserGAE.class, "user");
 		users.add(user);
-		ofy.put(user);
+		ofy.save().entities(user).now();
 		
 		Account account = new Account(new Long(1), "David", "D.", "example@example.com", userKey);
 		accounts.add(account);
-		ofy.put(account);
+		ofy.save().entities(account).now();
 	}
 
 	@Override
@@ -95,21 +95,21 @@ public class InMemoryObjects implements IDaoMocks {
 		accounts = new ArrayList<Account>();
 
 		UserGAE user = new UserGAE("user", "12345", true);
-		Key<UserGAE> userKey = new Key<UserGAE>(UserGAE.class, "user");
+		Key<UserGAE> userKey = Key.create(UserGAE.class, "user");
 		users.add(user);
-		ofy.put(user);
+		ofy.save().entities(user).now();
 		
 		Account account = new Account(new Long(1), "David", "D.", "example@example.com", userKey);
 		accounts.add(account);
-		ofy.put(account);
+		ofy.save().entities(account).now();
 		
 		UserGAE user2 = new UserGAE("user2", "12345", false);
 		users.add(user2);
-		ofy.put(user2);
+		ofy.save().entities(user2).now();
 
 		Account account2 = new Account(new Long(2), "David", "D.", "example@example.com", userKey);
 		accounts.add(account2);
-		ofy.put(account2);
+		ofy.save().entities(account2).now();
 		
 	}
 

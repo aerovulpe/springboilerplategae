@@ -8,8 +8,7 @@ public abstract class AbstractCurrentUserManager implements CurrentUserManager {
 	
 	@Override
 	public UserGAE getEnabledUser() {
-		UserGAE principal = (UserGAE) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return principal;
+		return (UserGAE) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
 }

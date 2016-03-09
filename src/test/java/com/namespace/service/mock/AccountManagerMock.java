@@ -1,11 +1,5 @@
 package com.namespace.service.mock;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import com.googlecode.objectify.Key;
 import com.namespace.domain.Account;
 import com.namespace.domain.UserGAE;
@@ -13,6 +7,11 @@ import com.namespace.repository.TestBase;
 import com.namespace.service.AccountManager;
 import com.namespace.service.CurrentUserManager;
 import com.namespace.util.SecurityUtil;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class AccountManagerMock extends TestBase implements AccountManager, CurrentUserManager{
 
@@ -81,14 +80,14 @@ public class AccountManagerMock extends TestBase implements AccountManager, Curr
 		accounts = new ArrayList<Account>();
 
 		UserGAE user = new UserGAE("user", "12345", true);
-		Key<UserGAE> userKey = new Key<UserGAE>(UserGAE.class, "user");
+		Key<UserGAE> userKey = Key.create(UserGAE.class, "user");
 		users.add(user);
 		
 		Account account = new Account(new Long(1), "David", "D.", "example@example.com", userKey);
 		accounts.add(account);
 		
 		UserGAE user2 = new UserGAE("user2", "12345", false);
-		Key<UserGAE> userKey2 = new Key<UserGAE>(UserGAE.class, "user2");
+		Key<UserGAE> userKey2 = Key.create(UserGAE.class, "user2");
 		users.add(user2);
 
 		Account account2 = new Account(new Long(2), "David", "D.", "example@example.com", userKey2);
