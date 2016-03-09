@@ -14,7 +14,7 @@
         <aspectj.version>1.6.12</aspectj.version>
         <slf4j.version>1.6.4</slf4j.version>
         <appengine.version>1.9.32</appengine.version>
-        <app.id></app.id>
+        <app.id>app-id</app.id>
         <app.version>0.1.0.BUILD-SNAPSHOT</app.version>
         <gcloud.plugin.version>2.0.9.74.v20150814</gcloud.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -449,10 +449,6 @@
                     <stopKey/>
                     <stopPort/>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.google.appengine.orm</groupId>
-                <artifactId>datanucleus-appengine</artifactId>
             </plugin>
         </plugins>
     </build>
