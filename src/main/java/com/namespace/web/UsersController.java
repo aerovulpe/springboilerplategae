@@ -1,9 +1,16 @@
 package com.namespace.web;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
+import com.namespace.domain.Account;
+import com.namespace.domain.UserGAE;
+import com.namespace.service.AccountManager;
+import com.namespace.service.UserAdministrationManager;
+import com.namespace.service.dto.EnabledUserForm;
+import com.namespace.service.dto.UserAdministrationForm;
+import com.namespace.service.dto.UserAdministrationFormAssembler;
+import com.namespace.service.validator.UserAdministrationDetailsValidator;
+import com.namespace.service.validator.UserAdministrationPasswordValidator;
+import com.namespace.service.validator.UserAdministrationValidator;
+import com.namespace.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
-import com.namespace.service.AccountManager;
-import com.namespace.service.UserAdministrationManager;
-import com.namespace.service.dto.EnabledUserForm;
-import com.namespace.service.dto.UserAdministrationForm;
-import com.namespace.service.dto.UserAdministrationFormAssembler;
-import com.namespace.service.validator.UserAdministrationDetailsValidator;
-import com.namespace.service.validator.UserAdministrationPasswordValidator;
-import com.namespace.service.validator.UserAdministrationValidator;
-import com.namespace.util.Pair;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 @Controller
 @Secured({"ROLE_ADMIN"})
@@ -94,7 +93,7 @@ public class UsersController {
 	/**
 	 * Update user form 
 	 */
-	@RequestMapping(value="/udpateUser/{username}/", method=RequestMethod.GET)
+	@RequestMapping(value="/updateUser/{username}/", method=RequestMethod.GET)
 	public ModelAndView updateUserHome(@PathVariable String username) {
 		
 		UserGAE user = this.userAdministrationManager.getUserByUsername(username);
@@ -224,8 +223,7 @@ public class UsersController {
 		logger.info("deactivatedUsers: " + deletedUsers);
 		
 		if(deletedUsers != null){
-			for (Iterator<String> iterator = deletedUsers.iterator(); iterator.hasNext();) {
-				String username = (String) iterator.next();
+			for (String username : deletedUsers) {
 				this.userAdministrationManager.deleteUserByUsername(username);
 			}
 		}

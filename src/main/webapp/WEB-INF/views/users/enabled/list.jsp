@@ -21,7 +21,7 @@
 							<tbody>
 								<c:forEach var="userItem" items="${usersList}">
 									<tr>
-										<td><a href="./udpateUser/${userItem.b.username}/"><c:out value="${userItem.a.id}"/></a></td>
+										<td><a href="./updateUser/${userItem.b.username}/"><c:out value="${userItem.a.id}"/></a></td>
 										<td><c:out value="${userItem.a.firstName}"/></td>
 										<td><c:out value="${userItem.a.lastName}"/></td>
 										<td><c:out value="${userItem.a.email}"/></td>
