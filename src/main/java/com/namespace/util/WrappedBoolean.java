@@ -5,20 +5,20 @@ package com.namespace.util;
  */
 public class WrappedBoolean {
 
-    private final Boolean result;
+    private final boolean result;
     private final String reason;
 
-    public WrappedBoolean(Boolean result) {
+    public WrappedBoolean(boolean result) {
         this.result = result;
         this.reason = "";
     }
 
-    public WrappedBoolean(Boolean result, String reason) {
+    public WrappedBoolean(boolean result, String reason) {
         this.result = result;
         this.reason = reason;
     }
 
-    public Boolean getResult() {
+    public boolean getResult() {
         return result;
     }
 

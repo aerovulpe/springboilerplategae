@@ -3,7 +3,7 @@ package com.namespace.domain;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Id;
@@ -14,6 +14,9 @@ import java.util.List;
 @SuppressWarnings("serial")
 @Entity
 public class UserGAE implements UserDetails {
+
+    private static final String ROLE_USER = "ROLE_USER";
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     @Id
     @com.googlecode.objectify.annotation.Id
@@ -97,10 +100,10 @@ public class UserGAE implements UserDetails {
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorityList = new ArrayList<GrantedAuthority>();
-        authorityList.add(new GrantedAuthorityImpl("ROLE_USER"));
+        List<GrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority(ROLE_USER));
         if (admin) {
-            authorityList.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
+            authorityList.add(new SimpleGrantedAuthority(ROLE_ADMIN));
         }
         return authorityList;
     }
@@ -112,7 +115,6 @@ public class UserGAE implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-//		return true;
         return accountNonExpired;
     }
 

@@ -26,7 +26,7 @@ public class UserAdministrationDTOAssemblerTest {
 		assertAccountNull(formNull);
 		
 		UserGAE user = new UserGAE("user", "12345", true);
-		Account account = new Account(1L, "David", "D.", "example@example.com", null);
+		Account account = new Account("David", "D.", "example@example.com", null);
 
 		UserAdministrationForm form1 = this.assembler.createUserAdministrationForm(null, account);
 		assertUserNull(form1);

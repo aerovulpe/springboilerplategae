@@ -83,7 +83,7 @@ public class InMemoryObjects implements IDaoMocks {
 		users.add(user);
 		ofy.save().entities(user).now();
 		
-		Account account = new Account(new Long(1), "David", "D.", "example@example.com", userKey);
+		Account account = new Account("David", "D.", "example@example.com", userKey);
 		accounts.add(account);
 		ofy.save().entities(account).now();
 	}
@@ -99,7 +99,7 @@ public class InMemoryObjects implements IDaoMocks {
 		users.add(user);
 		ofy.save().entities(user).now();
 		
-		Account account = new Account(new Long(1), "David", "D.", "example@example.com", userKey);
+		Account account = new Account("David", "D.", "example@example.com", userKey);
 		accounts.add(account);
 		ofy.save().entities(account).now();
 		
@@ -107,7 +107,7 @@ public class InMemoryObjects implements IDaoMocks {
 		users.add(user2);
 		ofy.save().entities(user2).now();
 
-		Account account2 = new Account(new Long(2), "David", "D.", "example@example.com", userKey);
+		Account account2 = new Account("David", "D.", "example@example.com", userKey);
 		accounts.add(account2);
 		ofy.save().entities(account2).now();
 		

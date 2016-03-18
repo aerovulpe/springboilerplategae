@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class UserAdministrationManagerTest extends TestBase {
@@ -78,7 +79,7 @@ public class UserAdministrationManagerTest extends TestBase {
         Objectify ofy = super.objectifyFactory.begin();
 
         UserGAE user = new UserGAE("user", "12345", true);
-        Account account = new Account(null, "David", "D.", "example@example.com", null);
+        Account account = new Account("David", "D.", "example@example.com", null);
 
         this.manager.createNewUserAccount(user, account);
 
@@ -87,6 +88,8 @@ public class UserAdministrationManagerTest extends TestBase {
                 .ancestor(user)
                 .first().now();
         assertEquals(user, userFromDatastore);
+        assertNotNull(account);
+        assertNotNull(accountFromDatastore);
         assertEquals(account.getUser(), accountFromDatastore.getUser());
     }
 
@@ -148,9 +151,9 @@ public class UserAdministrationManagerTest extends TestBase {
 //		users.add(user2);
 //		users.add(user);
 
-        Account account1 = new Account(null, "David", "D.", "example@example.com", userKey1);
-        Account account2 = new Account(null, "David", "D.", "example@example.com", userKey2);
-        Account account3 = new Account(null, "David", "D.", "example@example.com", userKey3);
+        Account account1 = new Account("David", "D.", "example@example.com", userKey1);
+        Account account2 = new Account("David", "D.", "example@example.com", userKey2);
+        Account account3 = new Account("David", "D.", "example@example.com", userKey3);
         accounts.add(account1);
         accounts.add(account2);
         accounts.add(account3);

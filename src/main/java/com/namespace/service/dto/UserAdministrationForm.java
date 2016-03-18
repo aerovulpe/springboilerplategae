@@ -76,11 +76,11 @@ public class UserAdministrationForm {
 		this.enabled = enabled;
 	}
 
-	public boolean isBannedUser() {
+	boolean isBannedUser() {
 		return bannedUser;
 	}
 
-	public void setBannedUser(boolean bannedUser) {
+	void setBannedUser(boolean bannedUser) {
 		this.bannedUser = bannedUser;
 	}
 

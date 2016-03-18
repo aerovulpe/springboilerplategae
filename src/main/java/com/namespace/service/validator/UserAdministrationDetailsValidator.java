@@ -18,5 +18,4 @@ public class UserAdministrationDetailsValidator extends UserAdministrationCommon
 	public void validate(Object target, Errors errors) {
 		commonValidations(errors);
 	}
-
 }

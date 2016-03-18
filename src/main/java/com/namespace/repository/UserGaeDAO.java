@@ -1,20 +1,19 @@
 package com.namespace.repository;
 
-import java.util.List;
-
 import com.namespace.domain.Account;
 import com.namespace.domain.UserGAE;
 
+import java.util.List;
+
 public interface UserGaeDAO extends GenericDAO<UserGAE>{
 
-	public List<UserGAE> findAll();
+	List<UserGAE> findAll();
 
-	public List<UserGAE> findAllEnabledUsers(boolean isEnabled);
+	List<UserGAE> findAllEnabledUsers(boolean isEnabled);
 
-	public UserGAE findByUsername(String username);
+	UserGAE findByUsername(String username);
 	
-	public UserGAE findByAccount(Account account);
+	UserGAE findByAccount(Account account);
 
-	public void createUserAccount(UserGAE user, Account account);
-
+	void createUserAccount(UserGAE user, Account account);
 }

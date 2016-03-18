@@ -1,8 +1,8 @@
 package com.namespace.util;
 
 public class Pair<A,B> {
-    public final A a;
-    public final B b;
+    private final A a;
+    private final B b;
 
     public Pair(A a, B b) {
         this.a = a;
@@ -21,6 +21,4 @@ public class Pair<A,B> {
 	public String toString() {
 		return "Pair [a=" + a + ", b=" + b + "]";
 	}
-    
-    
-};
+}

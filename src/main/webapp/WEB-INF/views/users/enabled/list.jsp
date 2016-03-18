@@ -11,7 +11,6 @@
 						<table id="sortTable" class="zebra-striped">
 							<thead>
 								<tr>
-									<th>Id</th>
 									<th>First Name</th>
 									<th>Last Name</th>
 									<th>Email</th>
@@ -21,7 +20,7 @@
 							<tbody>
 								<c:forEach var="userItem" items="${usersList}">
 									<tr>
-										<td><a href="./updateUser/${userItem.b.username}/"><c:out value="${userItem.a.id}"/></a></td>
+										<td><a href="./updateUser/${userItem.b.username}/"><c:out value="${userItem.a.email}"/></a></td>
 										<td><c:out value="${userItem.a.firstName}"/></td>
 										<td><c:out value="${userItem.a.lastName}"/></td>
 										<td><c:out value="${userItem.a.email}"/></td>

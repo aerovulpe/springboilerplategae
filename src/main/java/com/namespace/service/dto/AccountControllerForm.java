@@ -74,18 +74,11 @@ public class AccountControllerForm {
 	public void setAccountNonExpired(boolean accountNonExpired) {
 		this.accountNonExpired = accountNonExpired;
 	}
-    
-    public AccountControllerForm() {
-		// TODO Auto-generated constructor stub
-	}
 
-    public AccountControllerForm(Account account,  UserGAE userGAE) {
+    AccountControllerForm(Account account, UserGAE userGAE) {
 		this.firstName = account.getFirstName();
 		this.lastName = account.getLastName();
 		this.email = account.getEmail();
-
-		/*The view never see the password*/
-		//this.password = null;
 		this.accountNonExpired = userGAE.isAccountNonExpired();
 	}
 

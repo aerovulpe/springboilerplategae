@@ -168,7 +168,7 @@ public class UsersControllerIntegrationTest extends TestBase {
 	private void createAccountAndPutIntoDatastore(){
 		Objectify ofy = this.objectifyFactory.begin();
 		Key<UserGAE> userKey = ofy.save().entity(new UserGAE(USER_USERNAME, USER_PASSWORD, true, true)).now();
-		ofy.save().entity(new Account(null, ACCOUNT_FIRST_NAME, ACCOUNT_LAST_NAME, ACCOUNT_EMAIL, userKey)).now();
+		ofy.save().entity(new Account(ACCOUNT_FIRST_NAME, ACCOUNT_LAST_NAME, ACCOUNT_EMAIL, userKey)).now();
 		
 	}
 	

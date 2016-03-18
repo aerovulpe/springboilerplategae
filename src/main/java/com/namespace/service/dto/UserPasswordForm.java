@@ -1,58 +1,55 @@
 package com.namespace.service.dto;
 
-public class UserPasswordForm {
+class UserPasswordForm {
 
-	private String oldPassword;
-	
-	private String newPassword;
-	
-	private String newPasswordConfirmation;
-	
-	private boolean accountNonExpired;
+    private String oldPassword;
 
-	public String getOldPassword() {
-		return oldPassword;
-	}
+    private String newPassword;
 
-	public void setOldPassword(String oldPassword) {
-		this.oldPassword = oldPassword;
-	}
+    private String newPasswordConfirmation;
 
-	public String getNewPassword() {
-		return newPassword;
-	}
+    private boolean accountNonExpired;
 
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
-	}
+    public String getOldPassword() {
+        return oldPassword;
+    }
 
-	public String getNewPasswordConfirmation() {
-		return newPasswordConfirmation;
-	}
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
 
-	public void setNewPasswordConfirmation(String newPasswordConfirmation) {
-		this.newPasswordConfirmation = newPasswordConfirmation;
-	}
+    String getNewPassword() {
+        return newPassword;
+    }
 
-	public boolean isAccountNonExpired() {
-		return accountNonExpired;
-	}
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
 
-	public void setAccountNonExpired(boolean accountNonExpired) {
-		this.accountNonExpired = accountNonExpired;
-	}
+    public String getNewPasswordConfirmation() {
+        return newPasswordConfirmation;
+    }
 
-	public UserPasswordForm() {
-	}
+    public void setNewPasswordConfirmation(String newPasswordConfirmation) {
+        this.newPasswordConfirmation = newPasswordConfirmation;
+    }
 
-	@Override
-	public String toString() {
-		return "UserPasswordForm [oldPassword=" + oldPassword
-				+ ", newPassword=" + newPassword + ", newPasswordConfirmation="
-				+ newPasswordConfirmation + ", accountNonExpired="
-				+ accountNonExpired + "]";
-	}
-	
-	
-	
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    UserPasswordForm() {
+    }
+
+    @Override
+    public String toString() {
+        return "UserPasswordForm [oldPassword=" + oldPassword
+                + ", newPassword=" + newPassword + ", newPasswordConfirmation="
+                + newPasswordConfirmation + ", accountNonExpired="
+                + accountNonExpired + "]";
+    }
 }

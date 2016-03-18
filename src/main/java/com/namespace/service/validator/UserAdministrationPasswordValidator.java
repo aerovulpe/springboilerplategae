@@ -20,5 +20,4 @@ public class UserAdministrationPasswordValidator extends UserAdministrationCommo
 		
 		passwordValidation(errors, user);
 	}
-
 }

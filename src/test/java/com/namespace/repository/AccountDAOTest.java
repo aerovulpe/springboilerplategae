@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -41,13 +40,13 @@ public class AccountDAOTest extends TestBase{
 	
 	@Test
 	public void findAll_RightResults() throws InterruptedException{
-		List<Account> acountListToPersist = generateAccountsAndPersistThem();
+		List<Account> accountListToPersist = generateAccountsAndPersistThem();
 
-		List<Account> accountFromDatastoreList = this.dao.findAll();
+		List<Account> accountFromDatastoreList = dao.findAll();
 		
-		assertEquals(accountFromDatastoreList.size(), acountListToPersist.size());
+		assertEquals(accountFromDatastoreList.size(), accountListToPersist.size());
 
-		compareIfList1ContainsList2Objects(accountFromDatastoreList, acountListToPersist);
+		compareIfList1ContainsList2Objects(accountFromDatastoreList, accountListToPersist);
 	}
 
 	@Test
@@ -68,7 +67,7 @@ public class AccountDAOTest extends TestBase{
 		ofy.save().entity(user).now();
 		Key<UserGAE> userKey = Key.create(UserGAE.class, user.getUsername());
 
-		Account account = new Account(null, "David", "D.", "example@example.com", userKey);
+		Account account = new Account("David", "D.", "example@example.com", userKey);
 
 		ofy.save().entity(account).now();
 		
@@ -103,8 +102,7 @@ public class AccountDAOTest extends TestBase{
 	
 	@Test
 	public void update_BoundaryConditions(){
-		Account account = null;
-		assertFalse(this.dao.update(account));
+		assertFalse(this.dao.update(null));
 //		try {
 //			;
 //			fail("You have been persisted a null object!");
@@ -134,17 +132,15 @@ public class AccountDAOTest extends TestBase{
 	
 	private void compareIfList1ContainsList2Objects(
 			List<Account> list1, List<Account> list2) {
-		for (Iterator<Account> iterator = list2.iterator(); iterator
-				.hasNext();) {
-			Account account = (Account) iterator.next();
+		for (Account account : list2) {
 			assertTrue(list1.contains(account));
 		}
 	}
 	
 	private List<Account> generateAccountsAndPersistThem(){
-		List<Account> acountListToPersist = generateAccountList();
-		persistAccountList(acountListToPersist);
-		return acountListToPersist;
+		List<Account> accountListToPersist = generateAccountList();
+		persistAccountList(accountListToPersist);
+		return accountListToPersist;
 		
 	}
 	
@@ -158,10 +154,10 @@ public class AccountDAOTest extends TestBase{
 	private List<Account> generateAccountList(){
 		UserGAE user = new UserGAE("user", "12345", true);
 		Key<UserGAE> userKey = Key.create(UserGAE.class, user.getUsername());
-		Account account1 = new Account(null, "David", "D.", "example@example.com", userKey);
+		Account account1 = new Account("David", "D.", "example@example.com", userKey);
 		
-		Account account2 = new Account(null, "David", "D.", "example@example.com", userKey);
-		List<Account> accountList = new ArrayList<Account>();
+		Account account2 = new Account("David2", "D.", "example2@example.com", userKey);
+		List<Account> accountList = new ArrayList<>();
 		accountList.add(account1);
 		accountList.add(account2);
 		return accountList;

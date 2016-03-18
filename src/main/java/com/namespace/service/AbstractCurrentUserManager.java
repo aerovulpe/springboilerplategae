@@ -10,5 +10,4 @@ public abstract class AbstractCurrentUserManager implements CurrentUserManager {
 	public UserGAE getEnabledUser() {
 		return (UserGAE) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
-
 }

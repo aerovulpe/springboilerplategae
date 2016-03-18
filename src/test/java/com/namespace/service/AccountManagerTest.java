@@ -69,7 +69,7 @@ public class AccountManagerTest extends TestBase{
 		assertFalse(this.manager.updateAccount(new Account()));
 		
 		UserGAE user = new UserGAE("user", "12345", true);
-		Account account = new Account(null, "David", "D.", "example@example.com", null);
+		Account account = new Account("David", "D.", "example@example.com", null);
 		assertFalse(this.manager.updateAccount(account));
 		
 		ofy.save().entities(account).now();

@@ -4,10 +4,9 @@ import com.namespace.domain.Account;
 
 import java.util.List;
 
-public interface AccountDAO extends GenericDAO<Account>{
+public interface AccountDAO extends GenericDAO<Account> {
 
-	List<Account> findAll();
+    List<Account> findAll();
 
-	Account findByUsername(String username);
-	
+    Account findByUsername(String username);
 }

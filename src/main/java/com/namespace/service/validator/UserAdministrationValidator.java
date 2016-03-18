@@ -9,20 +9,18 @@ import com.namespace.service.dto.UserAdministrationForm;
 @Component
 public class UserAdministrationValidator extends UserAdministrationCommonsValidations implements Validator {
 
-	@Override
-	public boolean supports(Class<?> clazz) {
-		return UserAdministrationForm.class.isAssignableFrom(clazz);
-	}
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return UserAdministrationForm.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	public void validate(Object target, Errors errors) {
-		commonValidations(errors);
-	
-		UserAdministrationForm user = (UserAdministrationForm) target;
-		
-		passwordValidation(errors, user);
-		
-	}
+    @Override
+    public void validate(Object target, Errors errors) {
+        commonValidations(errors);
 
+        UserAdministrationForm user = (UserAdministrationForm) target;
 
+        passwordValidation(errors, user);
+
+    }
 }

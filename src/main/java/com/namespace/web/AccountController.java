@@ -41,7 +41,7 @@ public class AccountController {
 		Account enabledAccount = accountManager.getEnabledAccount();
 		logger.info("Sending the enabled account for the view: " + enabledAccount);
 		
-		AccountDetailsForm model = this.accountFormAssembler.createAccountDetailsForm(enabledAccount); 
+		AccountDetailsForm model = accountFormAssembler.createAccountDetailsForm(enabledAccount);
 		
 		return new ModelAndView("account/account", "account", model);
 	}

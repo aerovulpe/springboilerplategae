@@ -45,11 +45,7 @@ public class UserGaeDAOImpl implements UserGaeDAO {
 
         Query<UserGAE> q = ofy.load().type(UserGAE.class).filter("enabled ==", isEnabled);
 
-//			UserGAE user = ofy.query(UserGAE.class).get();
-//			logger.info("**********************user:" + user.toString());
-
         List<UserGAE> users = q.list();
-
 
         logger.info("retrieving the users list from the datastore: "
                 + users.toString());
@@ -59,11 +55,15 @@ public class UserGaeDAOImpl implements UserGaeDAO {
 
     @Override
     public void create(UserGAE user) throws Exception {
-        if (user != null) {
-            Objectify ofy = objectifyFactory.begin();
+        Objectify ofy = objectifyFactory.begin();
+
+        if (user == null) {
+            throw new Exception("You can't create a null user");
+
+        } else if (ofy.load().key(Key.create(UserGAE.class, user.getUsername())).now() == null) {
             ofy.save().entity(user).now();
         } else {
-            throw new Exception("You can't create a null user");
+            throw new Exception("User already exists.");
         }
     }
 
@@ -75,9 +75,7 @@ public class UserGaeDAOImpl implements UserGaeDAO {
 
         Objectify ofy = objectifyFactory.begin();
 
-        boolean thisAccountAlreadyExist = ofy.load().key(Key.create(UserGAE.class, user.getUsername())).now() != null;
-
-        if (thisAccountAlreadyExist) {
+        if (ofy.load().key(Key.create(UserGAE.class, user.getUsername())).now() != null) {
             ofy.save().entity(user).now();
             return true;
         } else {
@@ -103,12 +101,11 @@ public class UserGaeDAOImpl implements UserGaeDAO {
         }
     }
 
-    //TODO:Eliminar esta clase
     @Override
     public void createUserAccount(final UserGAE user, final Account account) {
 
         final Objectify ofy = objectifyFactory.begin();
-        WrappedBoolean result = ofy.transact(new Work<WrappedBoolean>() {
+        ofy.transact(new Work<WrappedBoolean>() {
             @Override
             public WrappedBoolean run() {
                 try {
@@ -121,15 +118,7 @@ public class UserGaeDAOImpl implements UserGaeDAO {
                     account.setUser(userGaeKey);
                     logger.info("ofy.put(account) will be realized now");
                     ofy.save().entity(user).now();
-                    logger.info("ofy.put(account) was realized sucessfully");
-
-//			Key<Account> accountKey = new Key<Account>(Account.class, account.getId());
-
-//			logger.info("accountKey:" + accountKey.toString());
-//			scheduler.setAccount(new Key<Account>(Account.class, account.getId()));
-                    logger.info("ofy.put(scheduler) will be realized now");
-                    //ofy.put(scheduler);
-                    logger.info("ofy.put(scheduler) was realized sucessfully");
+                    logger.info("ofy.put(account) was realized successfully");
 
                     return new WrappedBoolean(true);
                 } catch (Exception e) {

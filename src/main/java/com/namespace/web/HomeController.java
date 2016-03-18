@@ -21,65 +21,67 @@ import com.namespace.service.AbstractCurrentUserManager;
 @Controller
 public class HomeController extends AbstractCurrentUserManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
-	@Autowired private UserGaeDAO userGaeDAO;
-	@Autowired private AccountDAO accountDAO;	
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-	public HomeController() {
-	}
-	
-	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String home() {
-		logger.info("Welcome home!");
-		return "home";
-	}
-	
-	@RequestMapping(value="/login", method = RequestMethod.GET)
-	public String login() {
- 
-		return "login";
- 
-	}
- 
-	@RequestMapping(value="/loginfailed", method = RequestMethod.GET)
-	public String loginerror(ModelMap model) {
-		model.addAttribute("error", "true");
-		return "login";
- 
-	}
- 
-	@RequestMapping(value="/logout", method = RequestMethod.GET)
-	public String logout() {
- 
-		return "home"; 
-	}	
-	
-	@RequestMapping(value="/createDefaultUsers", method = RequestMethod.GET)
-	public String createDefaultUsers(ModelMap model) {
-		try{
-			logger.info("Creating default accounts...");
-			
-			UserGAE firstAdminUser = new UserGAE("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918", true, true, false, true);
-			UserGAE firstNonAdminUser = new UserGAE("user", "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb", false, true, false, true);
-			Key<UserGAE> userAdminKey = Key.create(UserGAE.class, firstAdminUser.getUsername());
-			Key<UserGAE> userNonAdminKey = Key.create(UserGAE.class, firstNonAdminUser.getUsername());
-			Account accountAdmin = new Account(null, "John", "Doe", "example@example.com", userAdminKey);
-			Account accountNonAdmin = new Account(null, "User1", "User1", "example1@example.com", userNonAdminKey);
+    @Autowired
+    private UserGaeDAO userGaeDAO;
+    @Autowired
+    private AccountDAO accountDAO;
 
-			this.userGaeDAO.create(firstAdminUser);
-			this.userGaeDAO.create(firstNonAdminUser);
-			this.accountDAO.create(accountAdmin);
-			this.accountDAO.create(accountNonAdmin);
-			
-			model.addAttribute("Error", "true");
-		}catch (Exception ex){
-			model.addAttribute("Error", "true");
-		}
-		return "home";
- 
-	}	
-	
+    public HomeController() {
+    }
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String home() {
+        logger.info("Welcome home!");
+        return "home";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login() {
+
+        return "login";
+
+    }
+
+    @RequestMapping(value = "/loginfailed", method = RequestMethod.GET)
+    public String loginError(ModelMap model) {
+        model.addAttribute("error", "true");
+        return "login";
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout() {
+        return "home";
+    }
+
+    @RequestMapping(value = "/createDefaultUsers", method = RequestMethod.GET)
+    public String createDefaultUsers(ModelMap model) {
+        try {
+            logger.info("Creating default accounts...");
+
+            UserGAE firstAdminUser = new UserGAE("admin", "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918", true, true, false, true);
+            UserGAE firstNonAdminUser = new UserGAE("user", "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb", false, true, false, true);
+            Key<UserGAE> userAdminKey = Key.create(UserGAE.class, firstAdminUser.getUsername());
+            Key<UserGAE> userNonAdminKey = Key.create(UserGAE.class, firstNonAdminUser.getUsername());
+            Account accountAdmin = new Account("John", "Doe", "example@example.com", userAdminKey);
+            Account accountNonAdmin = new Account("User1", "User1", "example1@example.com", userNonAdminKey);
+
+            if (accountDAO.findByUsername("user") == null) {
+                this.accountDAO.create(accountAdmin);
+                this.accountDAO.create(accountNonAdmin);
+            }
+
+            if (userGaeDAO.findByUsername("user") == null) {
+                this.userGaeDAO.create(firstAdminUser);
+                this.userGaeDAO.create(firstNonAdminUser);
+            }
+
+            model.addAttribute("Error", "true");
+        } catch (Exception ex) {
+            model.addAttribute("Error", "true");
+        }
+        return "home";
+    }
 }
 

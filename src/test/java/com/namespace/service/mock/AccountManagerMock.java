@@ -40,7 +40,7 @@ public class AccountManagerMock extends TestBase implements AccountManager, Curr
 		for (Iterator<Account> iterator = accounts.iterator(); iterator.hasNext();) {
 			Account accountInMemory = (Account) iterator.next();
 
-			if(accountInMemory.getId().equals(account.getId())){
+			if(accountInMemory.getEmail().equals(account.getEmail())){
 				accounts.add(accounts.indexOf(accountInMemory), account);
 				return true;
 			}
@@ -83,14 +83,14 @@ public class AccountManagerMock extends TestBase implements AccountManager, Curr
 		Key<UserGAE> userKey = Key.create(UserGAE.class, "user");
 		users.add(user);
 		
-		Account account = new Account(new Long(1), "David", "D.", "example@example.com", userKey);
+		Account account = new Account("David", "D.", "example@example.com", userKey);
 		accounts.add(account);
 		
 		UserGAE user2 = new UserGAE("user2", "12345", false);
 		Key<UserGAE> userKey2 = Key.create(UserGAE.class, "user2");
 		users.add(user2);
 
-		Account account2 = new Account(new Long(2), "David", "D.", "example@example.com", userKey2);
+		Account account2 = new Account("David", "D.", "example@example.com", userKey2);
 		accounts.add(account2);
 
 	}

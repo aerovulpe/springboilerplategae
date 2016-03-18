@@ -3,7 +3,6 @@ package com.namespace.repository;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.cmd.Query;
 import com.namespace.domain.Account;
 import com.namespace.domain.UserGAE;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ public class AccountDAOImpl implements AccountDAO {
 
     public AccountDAOImpl(ObjectifyFactory objectifyFactory) {
         if (objectifyFactory != null)
-            logger.info("objectifyFactory was injected succesfully to accountDao: " +
+            logger.info("objectifyFactory was injected successfully to accountDao: " +
                     objectifyFactory.toString());
 
         this.objectifyFactory = objectifyFactory;
@@ -51,15 +50,15 @@ public class AccountDAOImpl implements AccountDAO {
 
             Key<UserGAE> userGaeKey = Key.create(UserGAE.class, username);
 
-            Query<Account> q = ofy.load().type(Account.class).ancestor(userGaeKey);
-            Account account = q.first().now();
+            Account account = ofy.load().type(Account.class).ancestor(userGaeKey).first().now();
 
             logger.info("retrieving this account from the datastore: " + account.toString());
 
             return account;
 
         } catch (Exception e) {
-            logger.info("cannot retrieve the " + username + "'s account from the datastore. Should be for two reasons: The account associated with this user doest'n exist, of they are not any accounts in the datastore");
+            logger.info("cannot retrieve the " + username + "'s account from the datastore. Should be for two reasons: " +
+                    "The account associated with this user doesn't exist, of there are not any accounts in the datastore");
             return null;
         }
     }
@@ -67,8 +66,7 @@ public class AccountDAOImpl implements AccountDAO {
 
     @Override
     public void create(Account account) {
-        Objectify ofy = objectifyFactory.begin();
-        ofy.save().entities(account);
+        objectifyFactory.begin().save().entities(account);
     }
 
     @Override
@@ -82,15 +80,14 @@ public class AccountDAOImpl implements AccountDAO {
 
         logger.info("verify if this account already exist " +
                 "in the datastore: " + account.toString());
-        boolean thisAccountAlreadyExist = ofy.load().ancestor(account.getUser()) != null;
 
-        if (thisAccountAlreadyExist) {
+        if (ofy.load().ancestor(account.getUser()) != null) {
             logger.info("Confirmed: this account already exist.");
             ofy.save().entities(account).now();
             return true;
         } else {
             logger.info("This account doesn't exist at the datastore or " +
-                    "something whas wrong (might be the ancestor reference");
+                    "something was wrong (might be the ancestor reference");
             return false;
         }
     }

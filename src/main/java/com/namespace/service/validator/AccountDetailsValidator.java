@@ -20,5 +20,4 @@ public class AccountDetailsValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "firstname_required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "email_required");
 	}
-	
 }
