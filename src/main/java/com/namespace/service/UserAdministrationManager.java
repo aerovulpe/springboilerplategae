@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserAdministrationManager {
 
-    void createNewUserAccount(UserGAE user, Account account);
+    void createNewUserAccount(UserGAE user, Account account) throws Exception;
 
     List<Pair<Account, UserGAE>> getEnabledUsers();
 

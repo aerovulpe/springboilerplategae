@@ -36,16 +36,12 @@ public class UserAdministrationManagerImpl extends AbstractCurrentUserManager im
     }
 
     @Override
-    public void createNewUserAccount(UserGAE user, Account account) {
+    public void createNewUserAccount(UserGAE user, Account account) throws Exception {
         logger.info("createNewUserAccount()");
 
-        try {
-            logger.info("Trying to create a new user: " + user.toString());
-            userGaeDAO.create(user);
-            logger.info("New user created successfully");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        logger.info("Trying to create a new user: " + user.toString());
+        userGaeDAO.create(user);
+        logger.info("New user created successfully");
 
         Key<UserGAE> userKey = Key.create(UserGAE.class, user.getUsername());
         account.setUser(userKey);

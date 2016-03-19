@@ -68,7 +68,7 @@ public class UsersController {
 
     @RequestMapping(value = "createUser", method = RequestMethod.POST)
     public String createNewUser(@ModelAttribute("user") UserAdministrationForm model,
-                                BindingResult result) {
+                                BindingResult result) throws Exception{
 
         userAdministrationValidator.validate(model, result);
 
