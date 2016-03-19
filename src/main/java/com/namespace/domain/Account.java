@@ -9,12 +9,11 @@ import javax.persistence.Id;
 @Entity
 public class Account {
 
-    private String firstName;
-
-    private String lastName;
-
     @Id
     @com.googlecode.objectify.annotation.Id
+    private Long id;
+    private String firstName;
+    private String lastName;
     private String email;
 
     @Parent
@@ -48,6 +47,10 @@ public class Account {
         return user;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public void setUser(Key<UserGAE> user) {
         this.user = user;
     }
@@ -60,57 +63,43 @@ public class Account {
         this.user = user;
     }
 
+    public Account(Long id, String firstName, String lastName,
+                   String email, Key<UserGAE> user) {
+        this(firstName, lastName, email, user);
+        this.id = id;
+    }
+
     public Account() {
     }
 
     @Override
     public String toString() {
-        return "Account [firstName=" + firstName + ", lastName="
+        return "Account [id=" + id + ", firstName=" + firstName + ", lastName="
                 + lastName + ", email=" + email + ", user=" + user + "]";
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((email == null) ? 0 : email.hashCode());
-        result = prime * result
-                + ((firstName == null) ? 0 : firstName.hashCode());
-        result = prime * result
-                + ((lastName == null) ? 0 : lastName.hashCode());
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
-        return result;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Account account = (Account) object;
+
+        return getId() != null ? getId().equals(account.getId()) : account.getId() == null &&
+                getFirstName().equals(account.getFirstName()) &&
+                getLastName().equals(account.getLastName()) &&
+                        getEmail().equals(account.getEmail()) &&
+                        (getUser() != null ? getUser().equals(account.getUser()) :
+                                account.getUser() == null);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Account other = (Account) obj;
-        if (email == null) {
-            if (other.email != null)
-                return false;
-        } else if (!email.equals(other.email))
-            return false;
-        if (firstName == null) {
-            if (other.firstName != null)
-                return false;
-        } else if (!firstName.equals(other.firstName))
-            return false;
-        if (lastName == null) {
-            if (other.lastName != null)
-                return false;
-        } else if (!lastName.equals(other.lastName))
-            return false;
-        if (user == null) {
-            if (other.user != null)
-                return false;
-        } else if (!user.equals(other.user))
-            return false;
-        return true;
+    public int hashCode() {
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + getFirstName().hashCode();
+        result = 31 * result + getLastName().hashCode();
+        result = 31 * result + getEmail().hashCode();
+        result = 31 * result + (getUser() != null ? getUser().hashCode() : 0);
+        return result;
     }
 }

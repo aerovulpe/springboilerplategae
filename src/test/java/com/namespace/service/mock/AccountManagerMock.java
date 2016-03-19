@@ -10,13 +10,12 @@ import com.namespace.util.SecurityUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class AccountManagerMock extends TestBase implements AccountManager, CurrentUserManager{
 
-	private List<Account> accounts = new ArrayList<Account>();
-	private List<UserGAE> users = new ArrayList<UserGAE>();
+	private List<Account> accounts = new ArrayList<>();
+	private List<UserGAE> users = new ArrayList<>();
 
 	public AccountManagerMock(UserGAE enabledUser) {
 		SecurityUtil.authenticateUser(enabledUser);
@@ -37,10 +36,8 @@ public class AccountManagerMock extends TestBase implements AccountManager, Curr
 	
 	@Override
 	public boolean updateAccount(Account account) {
-		for (Iterator<Account> iterator = accounts.iterator(); iterator.hasNext();) {
-			Account accountInMemory = (Account) iterator.next();
-
-			if(accountInMemory.getEmail().equals(account.getEmail())){
+		for (Account accountInMemory : accounts) {
+			if (accountInMemory.getEmail().equals(account.getEmail())) {
 				accounts.add(accounts.indexOf(accountInMemory), account);
 				return true;
 			}
@@ -55,10 +52,8 @@ public class AccountManagerMock extends TestBase implements AccountManager, Curr
 
 	@Override
 	public boolean updateUser(UserGAE user) {
-		for (Iterator<UserGAE> iterator = users.iterator(); iterator.hasNext();) {
-			UserGAE userInMemory = (UserGAE) iterator.next();
-
-			if(userInMemory.getUsername().equals(user.getUsername())){
+		for (UserGAE userInMemory : users) {
+			if (userInMemory.getUsername().equals(user.getUsername())) {
 				users.add(users.indexOf(userInMemory), user);
 				return true;
 			}
@@ -69,28 +64,27 @@ public class AccountManagerMock extends TestBase implements AccountManager, Curr
 
 	@Override
 	public UserGAE getEnabledUser() {
-		UserGAE principal = (UserGAE) SecurityContextHolder.getContext()
+		return (UserGAE) SecurityContextHolder.getContext()
 														   .getAuthentication()
 														   .getPrincipal();
-		return principal;
 	}
 	
 	public void createInMemoryDomainObjects(){
-		users = new ArrayList<UserGAE>();
-		accounts = new ArrayList<Account>();
+		users = new ArrayList<>();
+		accounts = new ArrayList<>();
 
 		UserGAE user = new UserGAE("user", "12345", true);
 		Key<UserGAE> userKey = Key.create(UserGAE.class, "user");
 		users.add(user);
 		
-		Account account = new Account("David", "D.", "example@example.com", userKey);
+		Account account = new Account(1L, "David", "D.", "example@example.com", userKey);
 		accounts.add(account);
 		
 		UserGAE user2 = new UserGAE("user2", "12345", false);
 		Key<UserGAE> userKey2 = Key.create(UserGAE.class, "user2");
 		users.add(user2);
 
-		Account account2 = new Account("David", "D.", "example@example.com", userKey2);
+		Account account2 = new Account(2L, "David", "D.", "example@example.com", userKey2);
 		accounts.add(account2);
 
 	}
