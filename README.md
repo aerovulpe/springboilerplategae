@@ -1,7 +1,7 @@
 Complete Google App Engine + Spring 4 Web App Example
 =====================================================
 
-This repository contains best practices for an JEE (Spring based) application architecture. It's a great boilerplate to start JEE web apps and deploy them in GAE. 
+This repository contains best practices for an JEE (Spring based) application architecture. It's a great boilerplate to start JEE web apps and deploy them to GAE. 
 
 ### Introduction
 
@@ -51,9 +51,9 @@ Each user has a different role (for authentication and authorization purposes).
 
 ### Deploying the app
 
-To deploy the app on GAE change fill the following tag src/main/webapp/WEB-INF/appengine-web and change with your application name:
+To deploy the app on GAE, change fill the following tag in pom.xml with your application name:
 ``` 
-<application>example</application>
+<app.id>example</app.id>
 ```
 
 And run

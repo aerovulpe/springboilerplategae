@@ -5,7 +5,7 @@
     <groupId>com.namespace</groupId>
     <artifactId>Spring4-GAE-boilerplate</artifactId>
     <packaging>war</packaging>
-    <version>0.1.0.BUILD-SNAPSHOT</version>
+    <version>0-1-0</version>
     <name>Spring4-GAE-boilerplate</name>
     <properties>
         <roo.version>1.2.1.RELEASE</roo.version>
@@ -14,13 +14,13 @@
         <aspectj.version>1.8.9</aspectj.version>
         <slf4j.version>1.7.19</slf4j.version>
         <appengine.version>1.9.34</appengine.version>
-        <app.id>app-id</app.id>
+        <app.id>example</app.id>
         <app.version>${project.version}</app.version>
         <gcloud.plugin.version>2.0.9.95.v20160203</gcloud.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
         <spring-security.version>4.0.4.RELEASE</spring-security.version>
-        <maven.version>3.3</maven.version>
+        <maven.version>3.1</maven.version>
     </properties>
     <prerequisites>
         <maven>${maven.version}</maven>
