@@ -36,7 +36,7 @@ To run the app at localhost using maven type the following command in your termi
 ``` 
 mvn gae:run
 ```
-And launch your web browser to `http://localhost:8000/` and sign in with a default user:
+And launch your web browser to `http://localhost:8080/` and sign in with a default user:
 
 ``` 
 User: admin
