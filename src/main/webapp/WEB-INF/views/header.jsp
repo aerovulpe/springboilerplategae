@@ -33,7 +33,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="brand" href="#">Spring3 and GAE</a>
+            <a class="brand" href="#">Spring 4 and GAE</a>
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li><a href="${home}">${fn:escapeXml(home_label)}</a></li>
