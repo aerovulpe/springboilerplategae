@@ -19,8 +19,6 @@ This sample web app integrate the following technologies, methodologies and tool
 * i18n
 * JSTL
 * Apache Tiles
-* JQuery
-* Twitter Bootstrap
 * Spring Security (with customized user accounts)
 * Test Driven development (Test units and integration tests)
 * Maven
@@ -34,7 +32,7 @@ Getting Started
 
 To run the app at localhost using maven type the following command in your terminal, at the root folder of the project:
 ``` 
-mvn gae:run
+mvn appengine:devserver
 ```
 And launch your web browser to `http://localhost:8080/` and sign in with a default user:
 
@@ -56,6 +54,11 @@ Each user has a different role (for authentication and authorization purposes).
 To deploy the app on GAE change fill the following tag src/main/webapp/WEB-INF/appengine-web and change with your application name:
 ``` 
 <application>example</application>
+```
+
+And run
+```
+mvn appengine:update
 ```
 
 That's all.
