@@ -81,7 +81,11 @@ public class UserAdministrationManagerTest extends TestBase {
         UserGAE user = new UserGAE("user", "12345", true);
         Account account = new Account("David", "D.", "example@example.com", null);
 
-        this.manager.createNewUserAccount(user, account);
+        try {
+            this.manager.createNewUserAccount(user, account);
+        } catch (Exception e) {
+           logger.error(e.getMessage());
+        }
 
         UserGAE userFromDatastore = ofy.load().key(Key.create(UserGAE.class, user.getUsername())).now();
         Account accountFromDatastore = ofy.load().type(Account.class)

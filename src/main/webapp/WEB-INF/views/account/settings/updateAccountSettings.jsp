@@ -1,3 +1,4 @@
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ include file="/WEB-INF/views/include.jsp" %>
 
 	<div class="container" style="margin-top: -0px; padding-right: 0px; padding-top: 20px;" >
