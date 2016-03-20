@@ -1,5 +1,5 @@
-Complete Google App Engine + Spring 3 Web App Example
-===============================================================================
+Complete Google App Engine + Spring 4 Web App Example
+=====================================================
 
 This repository contains best practices for an JEE (Spring based) application architecture. It's a great boilerplate to start JEE web apps and deploy them in GAE. 
 
@@ -56,17 +56,6 @@ Each user has a different role (for authentication and authorization purposes).
 To deploy the app on GAE change fill the following tag src/main/webapp/WEB-INF/appengine-web and change with your application name:
 ``` 
 <application>example</application>
-```
-and type the following maven command in your terminal, at the root folder:
-``` 
-mvn gae:deploy
-```
-
-### Using Eclipse
-
-If you use Eclipse, type the following command-line mvn command to create your .classpath file: 
-``` 
-mvn eclipse:eclipse
 ```
 
 That's all.

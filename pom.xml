@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.namespace</groupId>
-    <artifactId>Spring3-GAE-boilerplate</artifactId>
+    <artifactId>Spring4-GAE-boilerplate</artifactId>
     <packaging>war</packaging>
     <version>0.1.0.BUILD-SNAPSHOT</version>
-    <name>Spring3-GAE-boilerplate</name>
+    <name>Spring4-GAE-boilerplate</name>
     <properties>
         <roo.version>1.2.1.RELEASE</roo.version>
         <spring.version>4.2.5.RELEASE</spring.version>
@@ -16,11 +16,11 @@
         <appengine.version>1.9.34</appengine.version>
         <app.id>app-id</app.id>
         <app.version>${project.version}</app.version>
-        <gcloud.plugin.version>2.0.9.74.v20150814</gcloud.plugin.version>
+        <gcloud.plugin.version>2.0.9.95.v20160203</gcloud.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
         <spring-security.version>4.0.4.RELEASE</spring-security.version>
-        <maven.version>3.1</maven.version>
+        <maven.version>3.3</maven.version>
     </properties>
     <prerequisites>
         <maven>${maven.version}</maven>
@@ -353,7 +353,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.6</version>
                 <configuration>
                     <webXml>${project.build.directory}/generated-sources/appengine-endpoints/WEB-INF/web.xml</webXml>
                     <webResources>
@@ -371,8 +371,8 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <version>${maven.version}</version>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -382,7 +382,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.1</version>
+                <version>2.2</version>
                 <dependencies>
                     <!-- NB: You must use Maven 2.0.9 or above or these are ignored (see MNG-2972) -->
                     <dependency>
@@ -441,7 +441,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.3.7.v20160115</version>
+                <version>9.3.8.RC0</version>
                 <configuration>
                     <webAppConfig>
                         <contextPath>/${project.name}</contextPath>
