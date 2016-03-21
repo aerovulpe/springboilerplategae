@@ -38,6 +38,107 @@
 		p:basenames="WEB-INF/i18n/messages,WEB-INF/i18n/application" 
 		p:fallbackToSystemLocale="false"/>
 
+	<beans:bean id="viewResolver"
+		  class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<beans:property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<beans:property name="prefix" value="/WEB-INF/jsp/"/>
+		<beans:property name="suffix" value=".jsp"/>
+	</beans:bean>
+
+	<beans:bean id="oidClient" class="org.pac4j.oidc.client.OidcClient">
+		<beans:property name="clientID" value="343992089165-sp0l1km383i8cbm2j5nn20kbk5dk8hor.apps.googleusercontent.com" />
+		<beans:property name="secret" value="uR3D8ej1kIRPbqAFaxIE3HWh" />
+		<beans:property name="discoveryURI" value="https://accounts.google.com/.well-known/openid-configuration" />
+		<beans:property name="useNonce" value="true" />
+		<beans:property name="customParams">
+			<beans:map>
+				<beans:entry key="prompt" value="consent" />
+			</beans:map>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="facebookClient" class="org.pac4j.oauth.client.FacebookClient">
+		<beans:constructor-arg name="key" value="145278422258960" />
+		<beans:constructor-arg name="secret" value="be21409ba8f39b5dae2a7de525484da8" />
+	</beans:bean>
+
+	<beans:bean id="twitterClient" class="org.pac4j.oauth.client.TwitterClient">
+		<beans:constructor-arg name="key" value="CoxUiYwQOSFDReZYdjigBA" />
+		<beans:constructor-arg name="secret" value="2kAzunH5Btc4gRSaMr7D7MkyoJ5u1VzbOOzE8rBofs" />
+	</beans:bean>
+
+	<beans:bean id="testAuthenticator" class="org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator">
+	</beans:bean>
+
+	<beans:bean id="formClient" class="org.pac4j.http.client.indirect.FormClient">
+		<beans:constructor-arg name="loginUrl" value="http://localhost:8080/loginForm" />
+		<beans:constructor-arg name="usernamePasswordAuthenticator" ref="testAuthenticator" />
+	</beans:bean>
+
+	<beans:bean id="indirectBasicAuthClient" class="org.pac4j.http.client.indirect.IndirectBasicAuthClient">
+		<beans:constructor-arg name="usernamePasswordAuthenticator" ref="testAuthenticator" />
+	</beans:bean>
+
+	<beans:bean id="casAuthenticator" class="org.pac4j.cas.credentials.authenticator.CasRestAuthenticator">
+		<beans:constructor-arg name="casServerPrefixUrl" value="https://casserverpac4j.herokuapp.com/" />
+	</beans:bean>
+
+	<beans:bean id="casRestBasicAuthClient" class="org.pac4j.cas.client.rest.CasRestBasicAuthClient">
+		<beans:constructor-arg name="headerName" value="Authorization" />
+		<beans:constructor-arg name="prefixHeader" value="Basic " />
+		<beans:constructor-arg name="authenticator" ref="casAuthenticator" />
+	</beans:bean>
+
+	<beans:bean id="casClient" class="org.pac4j.cas.client.CasClient">
+		<beans:property name="casLoginUrl" value="https://casserverpac4j.herokuapp.com/login" />
+	</beans:bean>
+
+	<beans:bean id="parameterClient" class="org.pac4j.http.client.direct.ParameterClient">
+		<beans:constructor-arg name="parameterName" value="token" />
+		<beans:constructor-arg name="tokenAuthenticator">
+			<beans:bean class="org.pac4j.jwt.credentials.authenticator.JwtAuthenticator">
+				<beans:constructor-arg name="signingSecret" value="12345678901234567890123456789012" />
+				<beans:constructor-arg name="encryptionSecret" value="12345678901234567890123456789012" />
+			</beans:bean>
+		</beans:constructor-arg>
+		<beans:property name="supportGetRequest" value="true" />
+		<beans:property name="supportPostRequest" value="false" />
+	</beans:bean>
+
+	<beans:bean id="directBasicAuthClient" class="org.pac4j.http.client.direct.DirectBasicAuthClient">
+		<beans:constructor-arg name="usernamePasswordAuthenticator" ref="testAuthenticator" />
+	</beans:bean>
+
+	<beans:bean id="clients" class="org.pac4j.core.client.Clients">
+		<beans:constructor-arg name="callbackUrl" value="http://localhost:8080/callback" />
+		<beans:constructor-arg name="clients">
+			<beans:list>
+				<beans:ref bean="oidClient" />
+				<beans:ref bean="facebookClient" />
+				<beans:ref bean="twitterClient" />
+				<beans:ref bean="formClient" />
+				<beans:ref bean="indirectBasicAuthClient" />
+				<beans:ref bean="casClient" />
+				<beans:ref bean="parameterClient" />
+				<beans:ref bean="directBasicAuthClient" />
+				<beans:ref bean="casRestBasicAuthClient" />
+			</beans:list>
+		</beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="adminRoleAuthorizer" class="org.pac4j.core.authorization.RequireAnyRoleAuthorizer">
+		<beans:constructor-arg name="roles" value="ROLE_ADMIN" />
+	</beans:bean>
+
+	<beans:bean id="config" class="org.pac4j.core.config.Config">
+		<beans:constructor-arg name="clients" ref="clients" />
+		<beans:constructor-arg name="authorizers">
+			<beans:map>
+				<beans:entry key="admin" value-ref="adminRoleAuthorizer" />
+			</beans:map>
+		</beans:constructor-arg>
+	</beans:bean>
+
 	<!-- store preferred language configuration in a cookie -->
 	<beans:bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver" id="localeResolver" p:cookieName="locale"/>	
 	

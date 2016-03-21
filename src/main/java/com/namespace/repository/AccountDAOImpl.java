@@ -4,7 +4,6 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +43,33 @@ public class AccountDAOImpl implements AccountDAO {
     }
 
     @Override
+    public List<Account> findEnabled() {
+        Objectify ofy = objectifyFactory.begin();
+
+        List<Account> accounts = ofy.load().type(Account.class).filter("enabled ==", true).list();
+
+        logger.info("retrieving the accounts from the datastore: " + accounts.toString());
+
+        return accounts;
+    }
+
+    @Override
+    public List<Account> findDisabled() {
+        Objectify ofy = objectifyFactory.begin();
+
+        List<Account> accounts = ofy.load().type(Account.class).filter("enabled ==", false).list();
+
+        logger.info("retrieving the accounts from the datastore: " + accounts.toString());
+
+        return accounts;
+    }
+
+    @Override
     public Account findByUsername(String username) {
         try {
             Objectify ofy = objectifyFactory.begin();
 
-            Key<UserGAE> userGaeKey = Key.create(UserGAE.class, username);
-
-            Account account = ofy.load().type(Account.class).ancestor(userGaeKey).first().now();
+            Account account =  ofy.load().key(Key.create(Account.class, username)).now();
 
             logger.info("retrieving this account from the datastore: " + account.toString());
 

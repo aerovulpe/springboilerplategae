@@ -8,5 +8,9 @@ public interface AccountDAO extends GenericDAO<Account> {
 
     List<Account> findAll();
 
+    List<Account> findEnabled();
+
+    List<Account> findDisabled();
+
     Account findByUsername(String username);
 }

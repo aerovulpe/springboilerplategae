@@ -3,13 +3,12 @@ package com.namespace.service.dto;
 import org.springframework.stereotype.Component;
 
 import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
 
 @Component
 public class AccountFormAssembler {
 	
-	public AccountControllerForm createAccountControllerForm (Account account, UserGAE userGAE){
-		return new AccountControllerForm(account, userGAE);
+	public AccountControllerForm createAccountControllerForm (Account account){
+		return new AccountControllerForm(account);
 	}
 	
 	/**
@@ -31,13 +30,13 @@ public class AccountFormAssembler {
 		return account;
 	}
 
-    public UserPasswordForm createUserPasswordForm(UserGAE user){
+    public UserPasswordForm createUserPasswordForm(){
 		return new UserPasswordForm();
     }
     
-	public UserGAE copyUserPasswordFormToUserGAE(UserPasswordForm userPasswordForm, UserGAE usergae){
-		usergae.setPassword(userPasswordForm.getNewPassword());
-		return usergae;
+	public Account copyUserPasswordFormToAccount(UserPasswordForm userPasswordForm, Account account){
+		account.setPassword(userPasswordForm.getNewPassword());
+		return account;
 	}
 	
 

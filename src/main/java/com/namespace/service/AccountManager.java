@@ -1,18 +1,13 @@
 package com.namespace.service;
 
 import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
 
-public interface AccountManager extends CurrentUserManager {
-    boolean updateAccount(Account account);
+public interface AccountManager {
+    boolean updateAccount(Account username);
 
-    Account getEnabledAccount();
+    Account getEnabledAccount(String username);
 
     Account getAccountByUsername(String username);
 
-    Account getAccountByUser(UserGAE user);
-
-    boolean updateUser(UserGAE user);
-
-    boolean closeEnabledAccount();
+    boolean closeAccount(String username);
 }

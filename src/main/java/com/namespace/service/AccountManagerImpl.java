@@ -1,43 +1,25 @@
 package com.namespace.service;
 
+import com.namespace.domain.Account;
+import com.namespace.repository.AccountDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
-import com.namespace.repository.AccountDAO;
-import com.namespace.repository.UserGaeDAO;
-
 @Service
-public class AccountManagerImpl extends AbstractCurrentUserManager implements AccountManager {
+public class AccountManagerImpl implements AccountManager {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountManagerImpl.class);
 
     @Autowired
-    private UserGaeDAO userGaeDAO;
-    @Autowired
     private AccountDAO accountDAO;
 
-    public AccountManagerImpl(UserGaeDAO userGaeDAO,
-                              AccountDAO accountDAO) {
-        this.userGaeDAO = userGaeDAO;
+    public AccountManagerImpl(AccountDAO accountDAO) {
         this.accountDAO = accountDAO;
     }
 
     public AccountManagerImpl() {
-    }
-
-    @Override
-    public boolean updateUser(UserGAE user) {
-        logger.info("updateUser()");
-        try {
-            logger.info("Trying to update the user using userGaeDAO.update()");
-            return this.userGaeDAO.update(user);
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     @Override
@@ -49,13 +31,13 @@ public class AccountManagerImpl extends AbstractCurrentUserManager implements Ac
 
         try {
             logger.info("Trying to update the account using  accountDAO.update() ");
-            boolean isUpdatedSucessfully = this.accountDAO.update(account);
-            if (isUpdatedSucessfully) {
+            boolean isUpdatedSuccessfully = this.accountDAO.update(account);
+            if (isUpdatedSuccessfully) {
                 logger.info("This account was updated successfully" + account.toString());
             } else {
                 logger.info("This account was not updated successfully" + account.toString());
             }
-            return isUpdatedSucessfully;
+            return isUpdatedSuccessfully;
 
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -63,20 +45,18 @@ public class AccountManagerImpl extends AbstractCurrentUserManager implements Ac
         return false;
     }
 
-
     @Override
-    public Account getEnabledAccount() {
-        UserGAE principal = this.getEnabledUser();
-        return this.accountDAO.findByUsername(principal.getUsername());
+    public Account getEnabledAccount(String username) {
+        return accountDAO.findByUsername(username);
     }
 
     @Override
-    public boolean closeEnabledAccount() {
-        UserGAE enabledUser = getEnabledUser();
-        enabledUser.setEnabled(false);
-        enabledUser.setAccountNonExpired(false);
+    public boolean closeAccount(String username) {
+        Account account = accountDAO.findByUsername(username);
+        account.setEnabled(false);
+        account.setAccountNonExpired(false);
         try {
-            return this.userGaeDAO.update(enabledUser);
+            return accountDAO.update(account);
         } catch (Exception e) {
             return false;
         }
@@ -84,13 +64,6 @@ public class AccountManagerImpl extends AbstractCurrentUserManager implements Ac
 
     @Override
     public Account getAccountByUsername(String username) {
-        UserGAE user = this.userGaeDAO.findByUsername(username);
-        return getAccountByUser(user);
+        return accountDAO.findByUsername(username);
     }
-
-    @Override
-    public Account getAccountByUser(UserGAE user) {
-        return this.accountDAO.findByUsername(user.getUsername());
-    }
-
 }

@@ -1,5 +1,11 @@
 package com.namespace.web;
 
+import com.namespace.domain.Account;
+import com.namespace.service.AccountManager;
+import com.namespace.service.dto.AccountDetailsForm;
+import com.namespace.service.dto.AccountFormAssembler;
+import com.namespace.service.validator.AccountDetailsValidator;
+import com.namespace.util.Protected;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.namespace.domain.Account;
-import com.namespace.service.AccountManager;
-import com.namespace.service.dto.AccountDetailsForm;
-import com.namespace.service.dto.AccountFormAssembler;
-import com.namespace.service.validator.AccountDetailsValidator;
- 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class AccountController {
 
@@ -37,8 +40,8 @@ public class AccountController {
 	}
 	
 	@RequestMapping(value="/account", method=RequestMethod.GET)
-	public ModelAndView accountHome() {
-		Account enabledAccount = accountManager.getEnabledAccount();
+	public ModelAndView accountHome(HttpServletRequest request, HttpServletResponse response) {
+		Account enabledAccount = accountManager.getEnabledAccount(Protected.getProfile(request, response).getId());
 		logger.info("Sending the enabled account for the view: " + enabledAccount);
 		
 		AccountDetailsForm model = accountFormAssembler.createAccountDetailsForm(enabledAccount);
@@ -47,8 +50,8 @@ public class AccountController {
 	}
 
 	@RequestMapping(value="updateAccount", method=RequestMethod.POST)
-	public String updateAccount(@ModelAttribute("account") AccountDetailsForm model, 
-			BindingResult result){
+	public String updateAccount(HttpServletRequest request, HttpServletResponse response,
+                                @ModelAttribute("account") AccountDetailsForm model, BindingResult result){
 		
 		if(model == null)
 			throw new NullPointerException("The AccountDetailsFormModel cannot be null at " + AccountController.class.toString() + "updateAccount()");
@@ -59,7 +62,7 @@ public class AccountController {
 			return "account/account";
 		}else{
 			Account account = accountFormAssembler.copyAccountDetailsFormtoAccount(
-									model, this.accountManager.getEnabledAccount());
+									model, this.accountManager.getEnabledAccount(Protected.getProfile(request, response).getId()));
 			this.accountManager.updateAccount(account);
 			return "redirect:account";
 		}

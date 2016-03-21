@@ -1,26 +1,22 @@
 package com.namespace.service;
 
 import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
-import com.namespace.util.Pair;
 
 import java.util.List;
 
 public interface UserAdministrationManager {
 
-    void createNewUserAccount(UserGAE user, Account account) throws Exception;
+    void createNewUserAccount(Account account) throws Exception;
 
-    List<Pair<Account, UserGAE>> getEnabledUsers();
+    List<Account> getEnabledUsers();
 
-    List<Pair<Account, UserGAE>> getDisabledUsers();
+    List<Account> getDisabledUsers();
 
     boolean deactivateUserByUsername(String username);
 
     boolean deleteUserByUsername(String username);
 
-    UserGAE getUserByUsername(String username);
+    Account getUserByUsername(String username);
 
-    boolean updateUserDetails(UserGAE user, Account account);
-
-    boolean updateUser(UserGAE user);
+    boolean updateUserDetails(Account account);
 }

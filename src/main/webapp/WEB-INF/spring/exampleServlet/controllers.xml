@@ -11,6 +11,17 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 	<!-- Scans within the base package of the application for @Components to configure as beans -->
+    <context:component-scan base-package="org.pac4j.springframework.web" />
 	<context:component-scan base-package="com.namespace.web"/>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/login" />
+            <bean class="org.pac4j.springframework.web.RequiresAuthenticationInterceptor">
+                <constructor-arg name="config" ref="config" />
+                <constructor-arg name="clientName" value="IndirectBasicAuthClient" />
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
 	
 </beans>

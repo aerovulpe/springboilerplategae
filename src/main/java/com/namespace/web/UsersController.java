@@ -1,7 +1,6 @@
 package com.namespace.web;
 
 import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
 import com.namespace.service.AccountManager;
 import com.namespace.service.UserAdministrationManager;
 import com.namespace.service.dto.EnabledUserForm;
@@ -10,11 +9,17 @@ import com.namespace.service.dto.UserAdministrationFormAssembler;
 import com.namespace.service.validator.UserAdministrationDetailsValidator;
 import com.namespace.service.validator.UserAdministrationPasswordValidator;
 import com.namespace.service.validator.UserAdministrationValidator;
-import com.namespace.util.Pair;
+import org.pac4j.core.config.Config;
+import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.WebContext;
+import org.pac4j.core.exception.RequiresHttpAction;
+import org.pac4j.core.profile.ProfileManager;
+import org.pac4j.core.profile.UserProfile;
+import org.pac4j.http.client.indirect.FormClient;
+import org.pac4j.jwt.profile.JwtGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,15 +28,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
-@Secured({"ROLE_ADMIN"})
 public class UsersController {
 
     private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
+    @Autowired
+    private Config config;
     @Autowired
     private UserAdministrationFormAssembler userAdministrationFormAssembler;
     @Autowired
@@ -78,15 +87,11 @@ public class UsersController {
             HashMap<String, Object> domainModelMap;
             domainModelMap = (HashMap<String, Object>) userAdministrationFormAssembler
                     .copyNewUserFromUserAdministrationForm(model);
-            UserGAE user = (UserGAE) domainModelMap.get("user");
-            user.setEnabled(true);
-            user.setBannedUser(false);
-            user.setAccountNonExpired(true);
             Account account = (Account) domainModelMap.get("account");
 
-            userAdministrationManager.createNewUserAccount(user, account);
+            userAdministrationManager.createNewUserAccount(account);
 
-            return "redirect:updateUser/" + user.getUsername() + "/";
+            return "redirect:updateUser/" + account.getUser()+ "/";
         }
     }
 
@@ -97,11 +102,10 @@ public class UsersController {
     @RequestMapping(value = "/updateUser/{username}/", method = RequestMethod.GET)
     public ModelAndView updateUserHome(@PathVariable String username) {
 
-        UserGAE user = userAdministrationManager.getUserByUsername(username);
         Account account = accountManager.getAccountByUsername(username);
 
         UserAdministrationForm userAdministrationModel = userAdministrationFormAssembler
-                .createUserAdministrationForm(user, account);
+                .createUserAdministrationForm(account);
 
         ModelAndView mv = new ModelAndView("users/updateUser");
         mv.addObject("userDetailsModel", userAdministrationModel);
@@ -130,13 +134,11 @@ public class UsersController {
             HashMap<String, Object> domainModelMap;
             domainModelMap = (HashMap<String, Object>) userAdministrationFormAssembler
                     .updateUserDetailsFromUserAdministrationForm(model,
-                            userAdministrationManager.getUserByUsername(username),
-                            accountManager.getAccountByUsername(username));
+                            userAdministrationManager.getUserByUsername(username));
 
-            UserGAE user = (UserGAE) domainModelMap.get("user");
             Account account = (Account) domainModelMap.get("account");
 
-            userAdministrationManager.updateUserDetails(user, account);
+            userAdministrationManager.updateUserDetails(account);
 
             return "redirect:./";
         }
@@ -154,10 +156,10 @@ public class UsersController {
             logger.info("validation error!");
             return "../../updateUser/" + username + "/";
         } else {
-            UserGAE user = userAdministrationManager.getUserByUsername(username);
+            Account user = userAdministrationManager.getUserByUsername(username);
             user.setPassword(model.getPassword());
 
-            userAdministrationManager.updateUser(user);
+            userAdministrationManager.updateUserDetails(user);
 
             return "redirect:./";
         }
@@ -169,7 +171,7 @@ public class UsersController {
      */
     @RequestMapping(value = "/enabledUsersList", method = RequestMethod.GET)
     public ModelAndView enabledUserListHome() {
-        List<Pair<Account, UserGAE>> enabledUsers = userAdministrationManager.getEnabledUsers();
+        List<Account> enabledUsers = userAdministrationManager.getEnabledUsers();
 
         ModelAndView mv = new ModelAndView("users/listEnabledUser");
         mv.addObject("usersList", enabledUsers);
@@ -204,7 +206,7 @@ public class UsersController {
     @RequestMapping(value = "/disabledUsersList", method = RequestMethod.GET)
     public ModelAndView disabledUserListHome() {
 
-        List<Pair<Account, UserGAE>> disabledUsers = userAdministrationManager.getDisabledUsers();
+        List<Account> disabledUsers = userAdministrationManager.getDisabledUsers();
 
         ModelAndView mv = new ModelAndView("users/listDisabledUser");
         mv.addObject("usersList", disabledUsers);
@@ -230,5 +232,115 @@ public class UsersController {
         }
 
         return "redirect:disabledUsersList";
+    }
+
+    @RequestMapping("/")
+    public String root(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) throws RequiresHttpAction {
+        return index(request, response, map);
+    }
+
+    @RequestMapping("/index.html")
+    public String index(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) throws RequiresHttpAction {
+        final WebContext context = new J2EContext(request, response);
+        map.put("profile", getProfile(context));
+        return "index";
+    }
+
+    private UserProfile getProfile(WebContext context) {
+        final ProfileManager manager = new ProfileManager(context);
+        return manager.get(true);
+    }
+
+    @RequestMapping("/facebook/index.html")
+    public String facebook(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/facebook/notprotected.html")
+    public String facebookNotProtected(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        final WebContext context = new J2EContext(request, response);
+        map.put("profile", getProfile(context));
+        return "notProtected";
+    }
+
+    @RequestMapping("/facebookadmin/index.html")
+    public String facebookadmin(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/facebookcustom/index.html")
+    public String facebookcustom(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/twitter/index.html")
+    public String twitter(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/form/index.html")
+    public String form(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/basicauth/index.html")
+    public String basicauth(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/cas/index.html")
+    public String cas(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/casrest/index.html")
+    public String casrest(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/oidc/index.html")
+    public String oidc(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/protected/index.html")
+    public String protect(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/dba/index.html")
+    public String dba(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/rest-jwt/index.html")
+    public String restJwt(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/jwt.html")
+    public String jwt(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        final WebContext context = new J2EContext(request, response);
+        final UserProfile profile = getProfile(context);
+        final JwtGenerator<UserProfile> generator = new JwtGenerator<>("12345678901234567890123456789012");
+        String token = "";
+        if (profile != null) {
+            token = generator.generate(profile);
+        }
+        map.put("token", token);
+        return "jwt";
+    }
+
+    @RequestMapping("/loginForm")
+    public String theForm(Map<String, Object> map) {
+        final FormClient formClient = (FormClient) config.getClients().findClient("FormClient");
+        map.put("callbackUrl", formClient.getCallbackUrl());
+        return "form";
+    }
+
+    protected String protectedIndex(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        final WebContext context = new J2EContext(request, response);
+        map.put("profile", getProfile(context));
+        return "protectedIndex";
     }
 }

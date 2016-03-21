@@ -1,7 +1,6 @@
 package com.namespace.service.dto;
 
 import com.namespace.domain.Account;
-import com.namespace.domain.UserGAE;
 
 public class AccountControllerForm {
 
@@ -75,11 +74,11 @@ public class AccountControllerForm {
 		this.accountNonExpired = accountNonExpired;
 	}
 
-    AccountControllerForm(Account account, UserGAE userGAE) {
+    AccountControllerForm(Account account) {
 		this.firstName = account.getFirstName();
 		this.lastName = account.getLastName();
 		this.email = account.getEmail();
-		this.accountNonExpired = userGAE.isAccountNonExpired();
+		this.accountNonExpired = account.isAccountNonExpired();
 	}
 
     
