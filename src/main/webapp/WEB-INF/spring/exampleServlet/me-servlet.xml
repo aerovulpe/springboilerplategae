@@ -29,7 +29,7 @@
 	<!-- Imports MVC related beans  -->
 	<beans:import resource="mvc-config.xml"/>
 
-	<!-- Imports user-defined @Controller beans that process client requests -->
+	<!-- Imports account-defined @Controller beans that process client requests -->
 	<beans:import resource="controllers.xml" />
 	
 </beans:beans>

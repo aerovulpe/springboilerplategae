@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class AccountDAOImpl implements AccountDAO {
+public class AccountDAOGAEImpl implements AccountDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccountDAOImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountDAOGAEImpl.class);
 
     @Autowired
     private ObjectifyFactory objectifyFactory;
 
-    public AccountDAOImpl() {
+    public AccountDAOGAEImpl() {
     }
 
-    public AccountDAOImpl(ObjectifyFactory objectifyFactory) {
+    public AccountDAOGAEImpl(ObjectifyFactory objectifyFactory) {
         if (objectifyFactory != null)
             logger.info("objectifyFactory was injected successfully to accountDao: " +
                     objectifyFactory.toString());
@@ -92,7 +92,7 @@ public class AccountDAOImpl implements AccountDAO {
     public boolean update(Account account) {
         logger.info("update()");
 
-        if (account == null || account.getUser() == null)
+        if (account == null || account.getUsername() == null)
             return false;
 
         Objectify ofy = objectifyFactory.begin();
@@ -100,7 +100,7 @@ public class AccountDAOImpl implements AccountDAO {
         logger.info("verify if this account already exist " +
                 "in the datastore: " + account.toString());
 
-        if (ofy.load().ancestor(account.getUser()) != null) {
+        if (ofy.load().ancestor(account.getUsername()) != null) {
             logger.info("Confirmed: this account already exist.");
             ofy.save().entities(account).now();
             return true;

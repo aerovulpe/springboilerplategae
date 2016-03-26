@@ -41,7 +41,7 @@
 	<beans:bean id="viewResolver"
 		  class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<beans:property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-		<beans:property name="prefix" value="/WEB-INF/jsp/"/>
+		<beans:property name="prefix" value="/WEB-INF/views/"/>
 		<beans:property name="suffix" value=".jsp"/>
 	</beans:bean>
 
@@ -110,7 +110,7 @@
 	</beans:bean>
 
 	<beans:bean id="clients" class="org.pac4j.core.client.Clients">
-		<beans:constructor-arg name="callbackUrl" value="http://localhost:8080/callback" />
+		<beans:constructor-arg name="callbackUrl" value="http://localhost:8888/callback" />
 		<beans:constructor-arg name="clients">
 			<beans:list>
 				<beans:ref bean="oidClient" />
@@ -142,7 +142,7 @@
 	<!-- store preferred language configuration in a cookie -->
 	<beans:bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver" id="localeResolver" p:cookieName="locale"/>	
 	
-	<!-- Imports user-defined @Controller beans that process client requests -->
+	<!-- Imports account-defined @Controller beans that process client requests -->
 	<beans:import resource="controllers.xml" />
 	
 </beans:beans>

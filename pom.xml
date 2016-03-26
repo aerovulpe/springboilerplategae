@@ -44,7 +44,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
         <maven.version>3.1.0</maven.version>
-        <pac4j.version>1.8.4</pac4j.version>
+        <pac4j.version>1.8.7</pac4j.version>
         <spring-webmvc-pac4j.version>1.0.2</spring-webmvc-pac4j.version>
     </properties>
 
@@ -457,6 +457,8 @@
                         debugger like those included with Eclipse or IntelliJ -->
                     <!-- jvmFlags> <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
                         </jvmFlags -->
+                    <!--<address>127.0.0.1</address>-->
+                    <port>8888</port>
                 </configuration>
                 <executions>
                     <execution>

@@ -2,7 +2,7 @@ package com.namespace.service.dto;
 
 import java.util.List;
 
-public class EnabledUserForm {
+public class EnabledAccountsForm {
 
     private List<String> deactivate;
 
@@ -16,6 +16,6 @@ public class EnabledUserForm {
 
     @Override
     public String toString() {
-        return "EnabledUserForm [deactivate=" + deactivate + "]";
+        return "EnabledAccountsForm [deactivate=" + deactivate + "]";
     }
 }

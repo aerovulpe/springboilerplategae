@@ -4,6 +4,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Account {
 
     @Id
     @com.googlecode.objectify.annotation.Id
-    private String user;
+    private String username;
     private String password;
 
     public String getFirstName() {
@@ -51,12 +52,12 @@ public class Account {
         this.email = email;
     }
 
-    public String getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setAccountNonExpired(boolean accountNonExpired) {
@@ -112,36 +113,24 @@ public class Account {
         this.enabled = enabled;
     }
 
-    public Account(String firstName, String lastName, String email, boolean admin, boolean enabled, boolean bannedUser, boolean accountNonExpired, String user, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
+    public Account(String firstName, String lastName, String email, boolean admin, boolean enabled, String username, String password) {
+        this(firstName, lastName, email, username, password);
         this.admin = admin;
         this.enabled = enabled;
-        this.bannedUser = bannedUser;
-        this.accountNonExpired = accountNonExpired;
-        this.user = user;
-        this.password = password;
     }
 
-    public Account(String firstName, String lastName,
-                   String email, String user, String password) {
+    public Account(@NotNull String firstName, @NotNull String lastName,
+                   @NotNull String email, @NotNull String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.user = user;
+        this.username = username;
         this.password = password;
-        enabled = true;
         accountNonExpired = true;
     }
 
-//    public Account(Long id, String firstName, String lastName,
-//                   String email, String user) {
-//        this(firstName, lastName, email, user, null);
-//        this.id = id;
-//    }
-
-    public Account() {
+    // Private No-Arg constructor to ensure state integrity.
+    private Account() {
     }
 
     @Override
@@ -154,7 +143,7 @@ public class Account {
                 ", enabled=" + enabled +
                 ", bannedUser=" + bannedUser +
                 ", accountNonExpired=" + accountNonExpired +
-                ", user='" + user + '\'' +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
@@ -173,7 +162,7 @@ public class Account {
         if (!getFirstName().equals(account.getFirstName())) return false;
         if (!getLastName().equals(account.getLastName())) return false;
         if (!getEmail().equals(account.getEmail())) return false;
-        if (!getUser().equals(account.getUser())) return false;
+        if (!getUsername().equals(account.getUsername())) return false;
         return getPassword() != null ? getPassword().equals(account.getPassword()) : account.getPassword() == null;
 
     }
@@ -187,7 +176,7 @@ public class Account {
         result = 31 * result + (isEnabled() ? 1 : 0);
         result = 31 * result + (isBannedUser() ? 1 : 0);
         result = 31 * result + (isAccountNonExpired() ? 1 : 0);
-        result = 31 * result + getUser().hashCode();
+        result = 31 * result + getUsername().hashCode();
         result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
         return result;
     }

@@ -1,17 +1,15 @@
 package com.namespace.service.validator;
 
+import com.namespace.service.dto.AccountForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
-import com.namespace.service.dto.UserAdministrationForm;
 
 @Component
-public class UserAdministrationDetailsValidator extends UserAdministrationCommonsValidations implements Validator{
+public class AccountUpdateDetailsValidator extends AccountCommonsValidations {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return UserAdministrationForm.class.isAssignableFrom(clazz);
+		return AccountForm.class.isAssignableFrom(clazz);
 	}
 
 	@Override

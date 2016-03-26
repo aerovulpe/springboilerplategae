@@ -1,43 +1,47 @@
 package com.namespace.service.dto;
 
-import org.springframework.stereotype.Component;
-
 import com.namespace.domain.Account;
 
-@Component
+import javax.validation.constraints.NotNull;
+
 public class AccountFormAssembler {
-	
-	public AccountControllerForm createAccountControllerForm (Account account){
-		return new AccountControllerForm(account);
-	}
-	
-	/**
-	 * Account details
-	 */
-	public AccountDetailsForm createAccountDetailsForm(Account account){
-		AccountDetailsForm form = new AccountDetailsForm();
-		form.setFirstName(account.getFirstName());
-		form.setLastName(account.getLastName());
-		form.setEmail(account.getEmail());
-		return form; 
-	}
-	
-	public Account copyAccountDetailsFormtoAccount(AccountDetailsForm accountDetailsForm, Account account){
-		account.setFirstName(accountDetailsForm.getFirstName());
-		account.setLastName(accountDetailsForm.getLastName());
-		account.setEmail(accountDetailsForm.getEmail());
-		
-		return account;
-	}
 
-    public UserPasswordForm createUserPasswordForm(){
-		return new UserPasswordForm();
+    public static AccountForm createAccountForm(@NotNull Account account) {
+        AccountForm form = new AccountForm();
+        extractCommons(form, account);
+        form.setPassword(account.getPassword());
+        return form;
     }
-    
-	public Account copyUserPasswordFormToAccount(UserPasswordForm userPasswordForm, Account account){
-		account.setPassword(userPasswordForm.getNewPassword());
-		return account;
-	}
-	
 
+    public static Account copyNewAccountFromAccountForm(@NotNull AccountForm form) {
+        return new Account(form.getFirstName(), form.getLastName(), form.getEmail(), form.getUsername(),
+                form.getPassword());
+    }
+
+    public static Account updateAccountDetailsFromAccountForm(@NotNull AccountForm form, Account account) {
+        extractCommons(form, account);
+        return account;
+    }
+
+    public static AccountForm createAccountFormAdmin(@NotNull Account account) {
+        AccountForm form = new AccountForm();
+        extractCommons(form, account);
+        form.setAdmin(account.isAdmin());
+        form.setEnabled(account.isEnabled());
+        form.setBannedUser(account.isBannedUser());
+        form.setAccountNonExpired(account.isAccountNonLocked());
+        form.setPassword(account.getPassword());
+        return form;
+    }
+
+    public static Account copyNewAccountFromAccountFormAdmin(@NotNull AccountForm form) {
+        return new Account(form.getFirstName(), form.getLastName(), form.getEmail(), form.isAdmin(), form.isEnabled(),
+                form.getUsername(), form.getPassword());
+    }
+
+    private static void extractCommons(AccountForm form, @NotNull Account account) {
+        form.setFirstName(account.getFirstName());
+        form.setLastName(account.getLastName());
+        form.setEmail(account.getEmail());
+    }
 }
